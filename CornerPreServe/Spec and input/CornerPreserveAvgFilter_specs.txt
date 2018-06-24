@@ -1,0 +1,121 @@
+
+Project 2: You are to write the image processing method: Corner Preserving filter.
+
+*** What do you have to do (In C++):
+   - Run your program on the given input data, 
+	and name the output as CornerPreseve.txt.
+
+   - Run your histogram program on CornerPreseve.txt, 
+	and name the output as CornerPreseveHIST.txt
+
+   - First, run your threshold program on CornerPreseve.txt
+	using a few different threshold values (by looking at the histogram CornerPreseveHIST.txt)
+
+   - Use the threshold value that produces a "good" result 
+	and output the result to CornerPreseve_xx.txt, 
+	where xx is the threshold valuee of your choice. 
+	(Your TA will test your resule with his threshold value!)
+
+   - prettyPrint CornerPreseve_xx.txt and name it CornerPreseve_xxPP.txt 
+
+*** your hard copies should include:
+
+   - Cover page
+   - *Only* the source code of your corner Preserving filter program
+   - CornerPreseve_xx.txt
+   - CornerPreseveHIST.txt
+   - CornerPreseve_xxPP.txt 
+
+  **** You will lost one point for each missing outputs (*.txt)
+
+**************************************
+Language: C++
+Due date: C++ soft copy:  2/15/2017 Wednesday before Midnight
+Due date: C++  hard copy: 2/16/2016 Thursday in class
+
+*************************************
+
+I. Input: a txt file representing a grey-scale image with header. 
+	//** the name of the input file to be in argv[1] for C++.
+
+II. Output: //**the three output files 
+		// to be in argv[2], argv[3], and argv[4]
+	
+*******************************
+III. Data structure:
+*******************************
+     
+	- numRows (int)
+	- numCols (int)
+	- minVal (int)
+	- maxVal (int)
+	- newMin (int)
+	- newMax (int)
+ 
+	- mirrorFramedAry (int **) // a 2D array, need to dynamically allocate at run time
+			of size numRows + 2 by numCols + 2.
+
+	- tempAry (int **) // a 2D array, need to dynamically allocate at run time
+			of size numRows + 2 by numCols + 2.
+
+	- neighborARY[9](int) // an 1D array, will be used repeatedly,
+					// for storing each of the given corner neighobor groups 
+					// (nine of them) of pixel (i,j)
+ 
+	- neighborAVG[9] (double) // an 1D double array to store the result of the average of
+						// the nine group of pixel (i,j)
+    - methods:
+	- constructor(s) // need to dynamically allocate the two (2) arrays 
+				and assign values to numRows,..., etc.
+	- mirrorFramed // mirrow framing the image as taught in class
+
+	- loadImage // read from input file and load mirrorFramedAry
+
+	- loadNeighbors (...) // load a given corner neighbors of pixel(i,j)
+
+	- computeAVG (...) // compute the average of a given neighborAry and returns the average 
+					// to be store in neighborAVG
+	- minAVG (...) // find the minimum of the nine average in neighborAVG and assign to tempAry.
+				 
+ 	- findNewMinMax () // find the new minimum and max of tempAry
+
+	- outPutImage // output the header of output and the result of tempAry, 
+			   // without the frame, i.e., from tempAry[1][1] to .....
+
+	      
+*******************************
+III. Algorithm the corner preserving filter 
+*******************************
+  
+step 0: - open the input file and output file
+	  - read the image header, the four numbers
+	  - dynamically allocate mirrorFramedAry 
+	  - dynamically alloicate tempAry
+
+step 1: loadImage // read the input file and load onto mirrowframeAry begin at [1,1]
+
+step 2: mirrowFramed the mirrorFramedAry 
+
+step 3: process the MirrorframedAry, from left to right and top to bottom
+	   use i, j where i and j  begin at (1, 1) make sure you do not
+	   process the four sides of framed pixels.
+	
+step 4: which <-- 0 // the first group as given in lecture, a total of nine groups
+
+step 5: loadNeighbors(which, i,j)
+        computeAVG (which, ...) 
+	  
+step 6: which ++ // next group
+
+step 7: repeat step 5 while which < 9
+
+step 8:  tempAry[i,j] <-- minAVG (neighborAVG) 
+
+step 9: repeat step 3 to step 8 until all pixels are processed
+
+step 10: findNewMinMax(..)
+
+step 11: outPutImage with new min and max
+
+step 12: close all files.
+

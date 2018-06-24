@@ -1,0 +1,169 @@
+
+Project 10: Objects decomposition. The method used in the project
+	      is almost as a reversed of the thinning algorithm, 
+		i.e., instead, we are to flipping background pixels (==0) to object pixels.  
+		Therefore, it should be relative easy to create this project from your thinning project.
+
+**** Pre-processing steps to obtain the data for this project 10:
+
+Step 1: apply your distance transform program on the given *binary image* (to be given) 
+	   to produced the *distance image*.
+         // The binary image used in this step is to be used in project 10, as input-1.
+
+Step 2: Apply your threshold program on the distance image (the result of step 1) 
+		to produce a binary image. Use 4 for the threshold value.
+
+Step 3: Apply your 8-connected component program to the thresholded image (the result of step 2) 
+		to produce a connected component image.
+        // The connected component image produced from this step, step 3, is 
+	  // to be used in project 10, as input-2.
+
+*** You *may not* include of distance transform, or connected componen or threshold program in 
+*** project 10!!!!!!
+*** NO POINT will be given if otherwise done!    
+
+**************************************
+Language: C++
+Due date: soft copy:  5/3/2017 Wednesday before Midnight
+Due date: hard copy:  5/4/2016 Thursday in class
+
+*************************************
+
+I. Input-1 argv[1]): a binary image (the same image used in Pre-processing step 1.)
+   Input-2 argv[2]): a connected componenet image (the result of Pre-processing step 3.)
+
+II. Output-1 argv[3]: for the final result (an image
+			with image header for future processing.)
+
+    Output-2 argv[4]: for debugging 
+		***** and the hard copies to be turn in with your source code. 
+ 
+		-Pretty print the input image.
+			with proper caption.
+
+		-Pretty print the *third cycle* after each direction (N, S, W, E) 
+			with proper caption.
+
+		-Pretty print the *fifth cycle* (if not finish)
+			after each direction (N, S, W, E) 
+			with proper caption.
+
+		- Pretty print the result with proper caption. 
+
+*******************************
+III. Data structure:
+*******************************
+ - A Expansion class
+
+	- numRows (int)
+	- numCols (int)
+	- minVal (int)
+	- maxVal (int)
+	- changeflag (bool)
+	- cycleCount (int)
+
+	- objectAry (int **) a 2D array, need to dynamically allocate at run time
+			of size numRows + 2 by numCols + 2.
+            // this array is to be loaded from input-1.
+
+	- firstAry (int **) a 2D array, need to dynamically allocate at run time
+			of size numRows + 2 by numCols + 2.
+	 	// initially, this array is to be loaded from input-2.
+
+	- secondAry (int **) a 2D array, need to dynamically allocate at run time
+			of size numRows + 2 by numCols + 2.
+
+	- methods:
+	- constructor(...)
+		- need to dynamically allocate firstAry and secondAry 
+		- assign values to numRows,..., etc.
+ 	- zeroFramed (Ary)  // framing the extra rows and extra columns with zeros.
+	- loadImage (imgFile, Ary)
+			// Read from the File onto Ary  
+			// the first pixel of input imgFile is loaded 
+			// at Ary[1][1]
+	- copyAry // always copy from secondAry to firstAry
+
+	- DoExpansion (r, c, label)
+					// if objectAry(r,c) > 0 
+					// then secondAry(r,c) <-- label
+					// set changeFlag to true
+				    // This method is the one who keeps the status of changeFlag.
+	- NorthExpansion 
+			// scan the entire image, 
+			 if p(i,j) > 1 and its north neighbor is zero
+		 	    then call DoExpansion(i-1, j, p(i,j))
+				// to see if the p(i,j)'s neighbor on the north can be flip from zero to label.
+
+	- SouthExpansion 
+			// scan the entire image, 
+			 if p(i,j) > 1 and its south neighbor is zero
+	 	    then call DoExpansion(i+1, j, p(i,j))
+				// to see if the p(i,j)'s neighbor on the south can be flip from zero to label.
+
+	- WestExpansion
+		// scan the entire image, 
+			 if p(i,j) > 1 and its west neighbor is zero
+	    then call DoExpansion(i, j-1, p(i,j))
+			// to see if the p(i,j)'s neighbor on the west can be flip from zero to label.
+
+	- EastExpansion
+		// scan the entire image, 
+			 if p(i,j) > 1 and its east neighbor is zero
+	    			then call DoExpansion(i, j+1, p(i,j))
+			// to see if the p(i,j)'s neighbor on the east can be flip from zero to label.  
+  
+	- prettyPrint
+     
+*******************************
+III. Algorithms 
+*******************************
+  
+step 0: read the image header
+	   dynamically allocate objectAry, firstAry and secondAry
+
+step 1: zeroFrame(objectAry)
+	   zeroFrame(firstAry)
+	   zeroFrame(secondAry)
+	   
+step 2: loadImage (argv[1], objectAry)
+ 	   loadImage (argv[2], firstAry)
+	   
+step 3: cycleCount <-- 0
+    	   prettyPrint objectAry to Output-2 
+
+step 4: if cycleCount is 0, or 3, or 5
+		prettyPrint firstAry to Output-2
+
+step 5: changeFlag <- false
+	   cycleCount++
+
+step 6: NorthExpansion   // process all pixels in firstAry and write the result to secondAry
+	
+	   copyAry() 
+			
+step 7: SouthExpansion  // process all pixels in firstAry and write the result to secondAry
+	  				   
+	   copyAry() 			
+
+step 8: WestExpansion // process all pixels in firstAry and write the result to secondAry
+
+	   copyAry()    			
+
+step 9: EastExpansion // process all pixels in firstAry and write the result to secondAry
+		  	      
+	   copyAry()    			
+
+step 10: repeat step 4 to step 9 while changeFlag is true.
+			
+
+step 11: prettyPrint firstAry to Output-2
+
+
+step 12: write image header to Output-1 and copy firstAry from [1][1] 
+         to Output-1
+
+step 13: close all files
+
+
+

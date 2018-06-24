@@ -1,0 +1,101 @@
+
+Project 8: Sobel and Gradiant Edge Detectors 	     
+
+******* Project 8 **************************************
+Language: C++
+Due date: soft copy:  3/29/2017 Wednesday before Midnight
+Due date: hard copy:  3/30/2017 Thursday in Class.
+
+*************************************
+
+I. Input (argv[1]): a txt file representing a grey-scale image with header. 
+
+II. Outputs: Use argv[2] - argv[5] for the result of the four Sobel edge images.	
+     		  Use argv[6] for the result of the out image.
+		  Use argv	[7] for the pretty printing all the six files.
+
+	**** Using your exiting programs (histogram and threshold and prettyPrint): to do
+
+ 	- For each of the five edge image files 
+		- Compute the histogram of the file;
+	  	- select the "best" threshold value to do thresholding on the file
+		- prettyPring the result of the threshold 
+           
+	- Submit the hard copies with your source code on due date.
+
+	
+*******************************
+III. Data structure:
+*******************************
+  - An Image Class
+  
+	- numRows (int)
+	- numCols (int)
+	- minVal (int)
+	- maxVal (int)
+ 
+	- mirrorFramedAry (int **) // a 2D array, need to dynamically allocate at run time
+			of size numRows + 2 by numCols + 2.
+
+	- constructor(s) // need to dynamically allocate the two (2) arrays 
+				and assign values to numRows,..., etc.
+	- loadImage // load imgAry from input file to imgAry
+    	- mirrorFramed
+	- prettyPrint
+
+  -  a Edge class
+
+	- maskVertical[3][3] (int) // may be hard coded.
+	- maskHorizontal[3][3] (int) // may be hard coded.
+	- maskRightDiag[3][3] (int)// may be hard coded.
+	- maskLeftDiag[3][3] (int)// may be hard coded.
+
+	- SobelVertical (int **) a 2D array, need to dynamically allocate at run time
+			of size numRows+2 by numCols+2. 
+	- SobelHorizontal (int **) a 2D array, need to dynamically allocate at run time
+			of size numRows+2 by numCols+2.
+	- SobelRightDiag (int **) a 2D array, need to dynamically allocate at run time
+			of size numRows+2 by numCols+2.
+	- SobelLeftDiag (int **) a 2D array, need to dynamically allocate at run time
+			of size numRows+2 by numCols+2.
+	
+	- GradiantEdge (int **) a 2D array, need to dynamically allocate at run time
+			of size numRows+2 by numCols+2. 
+
+	- methods:
+
+		-convolute (i,j, mask)
+			// do a 3x3 convolution on img[i,j] with the mask and  return the result
+			// respective Sobel array.
+
+		-computeGradiant(i,j) 
+			// Compute the gradiant on img[i,j] and returns the result to GradiantEdge array.
+		     
+     
+*******************************
+III. Algorithms for Sobel and Gradiant Edge Detectors
+*******************************
+  
+step 0: open the image and read the image header
+	   dynamically allocate mirrorFramedAry and all the edge arrays
+
+step 1: loadImage // load input file to imgAry
+
+step 2: mirrowFramed (mirrorFramedAry)
+
+step 3: process the mirrorFramedAry, from left to right and top to bottom
+	  begin at (1, 1) // process all pixels!!!
+   
+		SobelVertical(i,j) <-- abs( convolute (i,j, maskVertical))
+		SobelHorizontal(i,j) <-- abs( convolute (i,j, maskHorizontal))
+		SobelRightDiag(i,j) <-- abs(convolute (i,j, maskRightDiag))
+		SobelLeftDiag(i,j) <-- abs (convolute (i,j, maskLeftDiag))
+     		GradiantEdge(i,j) <-- computeGradiant(i,j)
+
+step 4: repeat step 3 until all pixels are processed.
+
+step 5: write the results of the four Sobel edge arrays to argv[2],argv[3], argv[4], argv[5]
+  		write the result of the gradiant edge array to argv[6]
+
+step 6: close all files
+
